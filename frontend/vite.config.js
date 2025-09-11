@@ -10,6 +10,7 @@ export default defineConfig({
     },
   },
   server: {
+    allowedHosts: ['attendance-frontend-production-f797.up.railway.app'],
     port: 5173,
     host: true,
     proxy: {
