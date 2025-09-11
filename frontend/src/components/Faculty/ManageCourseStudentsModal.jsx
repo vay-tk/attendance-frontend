@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../UI/Modal';
 import Button from '../UI/Button';
 import LoadingSpinner from '../UI/LoadingSpinner';
-import axios from 'axios';
-import { getAllStudents } from '../../api/users';
 import apiClient from '../../api/auth';
 
 const ManageCourseStudentsModal = ({ course, onClose }) => {
@@ -23,7 +21,7 @@ const ManageCourseStudentsModal = ({ course, onClose }) => {
     setError('');
     try {
       // Fetch all students using API function
-      const res = await getAllStudents();
+      const res = await apiClient.get('/users?role=student')
       setStudents(res.data.data.users);
       // Fetch enrolled students for this course
       const enrolledRes = await apiClient.get(`/courses/${course._id}/students`);
@@ -126,3 +124,4 @@ const ManageCourseStudentsModal = ({ course, onClose }) => {
 };
 
 export default ManageCourseStudentsModal;
+
