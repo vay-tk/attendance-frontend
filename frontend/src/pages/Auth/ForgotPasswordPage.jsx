@@ -2,33 +2,33 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../components/UI/Button';
 import { validators, getValidationMessage } from '../../utils/validation';
 import toast from 'react-hot-toast';
+import { authAPI } from '../../api/auth'; // ✅ Import authAPI
 
 const ForgotPasswordPage = () => {
-  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [emailSent, setEmailSent] = useState(false);
-  const { forgotPassword, isLoading } = useAuth();
-  
+  const { isLoading } = useAuth(); // ✅ removed forgotPassword from here
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  // ✅ Now using authAPI instead of axios
   const onSubmit = async (data) => {
     setLoading(true);
     setMessage('');
     setError('');
     try {
-      const res = await axios.post('/api/auth/forgot-password', { email: data.email });
+      const res = await authAPI.forgotPassword(data.email);
       setMessage(res.data.message || 'Password reset email sent!');
       setEmailSent(true);
       toast.success('Password reset email sent!');
