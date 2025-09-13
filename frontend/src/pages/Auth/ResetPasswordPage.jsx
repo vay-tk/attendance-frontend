@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, CheckCircle } from 'lucide-react';
-import axios from 'axios';
-import { useAuth } from '../../hooks/useAuth';
+import { authAPI } from '../../api/auth';   // ✅ use centralized API
 import Button from '../../components/UI/Button';
-import { validators, getValidationMessage } from '../../utils/validation';
 import toast from 'react-hot-toast';
 
 const ResetPasswordPage = () => {
@@ -25,17 +23,21 @@ const ResetPasswordPage = () => {
     setLoading(true);
     setMessage('');
     setError('');
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       setLoading(false);
       return;
     }
+
     try {
-      const res = await axios.post(`/api/auth/reset-password/${token}`, { password });
+      // ✅ use authAPI.resetPassword
+      const res = await authAPI.resetPassword({ token, password });
+
       setMessage(res.data.message || 'Password has been reset!');
       setResetSuccess(true);
       toast.success('Password reset successful!');
-      
+
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         navigate('/dashboard');
